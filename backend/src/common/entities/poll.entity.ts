@@ -1,13 +1,13 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { pollStatus } from "../enums/pollStatus.enums";
 import { User } from "./user.entity";
-import { pollOption } from "./pollOption.entity";
+import { PollOption } from "./pollOption.entity";
 import { Vote } from "./vote.entity";
 
 @Entity()
 export class Poll{
-    @PrimaryGeneratedColumn('uuid')
-    id!:string
+    @PrimaryGeneratedColumn()
+    id!:number
 
     @Column()
     title!:string
@@ -24,8 +24,8 @@ export class Poll{
     @UpdateDateColumn()
     updatedAt!:Date
 
-    @OneToMany(()=>pollOption,(pollOption)=>pollOption.poll,{eager:false})
-    pollOptions!:pollOption
+    @OneToMany(()=>PollOption,(pollOption)=>pollOption.poll,{eager:false})
+    options!:PollOption[]
 
 
     @ManyToOne(()=> User,(user) => user.polls,{eager:false})

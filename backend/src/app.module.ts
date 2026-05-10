@@ -6,6 +6,7 @@ import {ConfigModule, ConfigService} from '@nestjs/config'
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PollsModule } from './polls/polls.module';
+import { VotesModule } from './votes/votes.module';
 
 @Module({
   imports: [ConfigModule.forRoot({isGlobal:true}),
@@ -24,7 +25,8 @@ import { PollsModule } from './polls/polls.module';
   }),
     AuthModule,
     UsersModule,
-    PollsModule],
+    PollsModule,
+    VotesModule],
   controllers: [AppController],
   providers: [AppService],
 })

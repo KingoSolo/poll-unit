@@ -4,7 +4,7 @@ import { Poll } from '../common/entities/poll.entity';
 import { Repository } from 'typeorm';
 import { CreatePollsDto } from './dto/createPolls.dto';
 import { pollStatus } from '../common/enums/pollStatus.enums';
-import { pollOption } from '../common/entities/pollOption.entity';
+import { PollOption } from '../common/entities/pollOption.entity';
 import { UpdatePollsDto } from './dto/updatePolls.dto';
 import { UserRole } from 'src/common/enums/userRole.enums';
 
@@ -14,8 +14,8 @@ export class PollsService {
         @InjectRepository(Poll)
         private pollsRepository : Repository<Poll>,
 
-        @InjectRepository(pollOption)
-        private pollsOptionRepository : Repository<pollOption>
+        @InjectRepository(PollOption)
+        private pollsOptionRepository : Repository<PollOption>
     ){}
 
     async create(dto:CreatePollsDto,userId:number){
@@ -54,7 +54,7 @@ export class PollsService {
     async findOne(id:number){
         const poll =  await this.pollsRepository.findOne({
             where:{id},
-            relations: ['options']
+            relations: ['options','createdBy']
         })
         if(!poll){
             throw new NotFoundException("Poll does not exist")
@@ -67,6 +67,7 @@ export class PollsService {
        if(poll.createdBy.id !== userId && userRole !== UserRole.ADMIN){
         throw new ForbiddenException('You are not allowed to update this poll')
        }
+       const {options, ...rest} =dto
        Object.assign(poll,dto)
        return await this.pollsRepository.save(poll)
     }
@@ -88,5 +89,26 @@ export class PollsService {
             );
         }
         return await this.pollsRepository.remove(deletedPoll)
+    }
+
+
+    async getResults(pollId:number,state?:string){
+        const query = this.pollsOptionRepository
+            .createQueryBuilder('PollOption')
+            .leftJoin('PollOption.votes','vote')
+            .select('PollOption.optionText','optionText')
+            .addSelect('COUNT(vote.id)','voteCount')
+
+            .where('PollOption.poll = :pollId',{
+                pollId
+            })
+
+             if (state) {
+            query.andWhere('vote.state = :state', {
+            state,
+            });
+        }
+            query.groupBy('PollOption.id')
+            return await query.getRawMany()
     }
 }

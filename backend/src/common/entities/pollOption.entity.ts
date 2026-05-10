@@ -3,16 +3,16 @@ import { Poll } from "./poll.entity";
 import { Vote } from "./vote.entity";
 
 @Entity()
-export class pollOption{
-    @PrimaryGeneratedColumn('uuid')
+export class PollOption{
+    @PrimaryGeneratedColumn()
     id!:number
 
     @Column()
     optionText!:string
 
-    @ManyToOne(()=>Poll,(poll)=>poll.pollOptions,{eager:false})
+    @ManyToOne(()=>Poll,(poll)=>poll.options,{eager:false})
     poll!:Poll
 
-    @OneToMany(()=>Vote,(vote)=>vote.pollOptions,{eager:false})
+    @OneToMany(()=>Vote,(vote)=>vote.pollOption,{eager:false})
     votes!:Vote[]
 }

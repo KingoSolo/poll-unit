@@ -18,6 +18,10 @@ export class UsersService {
         })
     }
 
+    async findOne(id: number) {
+        return this.userRepository.findOne({ where: { id } })
+    }
+
     async create(dto:SignUpDto){
         const user = this.userRepository.create(dto)
         return this.userRepository.save(user)
