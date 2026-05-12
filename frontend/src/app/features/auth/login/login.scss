@@ -1,0 +1,41 @@
+/* Login Form Styles with Tailwind */
+
+:host {
+  display: block;
+}
+
+
+input,
+select {
+  &:focus {
+    outline: none;
+  }
+}
+
+
+button {
+  &:not(:disabled) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+a {
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+
+  &:hover {
+    color: inherit;
+  }
+}
+
+* {
+  transition-property: border-color, box-shadow, background-color, color;
+  transition-timing-function: ease;
+  transition-duration: 200ms;
+}
