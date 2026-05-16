@@ -49,4 +49,8 @@ export class AuthService {
   getMe() {
     return this.http.get(`${this.baseUrl}/users/me`);
   }
+
+  updatePassword(currentPassword: string, newPassword: string) {
+    return this.http.patch(`${this.baseUrl}/users/me/password`, { currentPassword, newPassword });
+  }
 }

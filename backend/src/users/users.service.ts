@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../common/entities/user.entity';
 import { Repository } from 'typeorm';
 import { SignUpDto } from 'src/auth/dto/signup.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -35,6 +36,18 @@ export class UsersService {
             verified: true,
             totalPollsParticipated: votes.length,
         };
+    }
+
+    async updatePassword(id: number, currentPassword: string, newPassword: string) {
+        const user = await this.userRepository.findOne({ where: { id } });
+        if (!user) throw new NotFoundException('User not found');
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) throw new BadRequestException('Current password is incorrect');
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await this.userRepository.save(user);
+        return { message: 'Password updated successfully' };
     }
 
     async create(dto:SignUpDto){

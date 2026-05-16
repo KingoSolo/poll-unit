@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PollsService } from '../../../core/services/polls'; 
+import { PollsService } from '../../../core/services/polls';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import {
   FormBuilder,
@@ -16,18 +16,15 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-poll-detail',
-  imports: [ReactiveFormsModule, CommonModule, MatSnackBarModule, MatIconModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule, MatSnackBarModule, MatIconModule],
   templateUrl: './poll-detail.html',
   styleUrls: ['./poll-detail.scss']
 })
 export class PollDetailComponent implements OnInit {
 
   poll: any;
-
+  loading = true;
   voteForm!: FormGroup;
-
-  successMessage = '';
-
   hasVoted = false;
 
   constructor(
@@ -57,9 +54,11 @@ export class PollDetailComponent implements OnInit {
 
       next: (res: any) => {
         this.poll = res;
+        this.loading = false;
       },
 
       error: (err) => {
+        this.loading = false;
         this.snackBar.open(err?.error?.message || 'Failed to load poll', 'Close', {
           duration: 4000,
           panelClass: ['error-snackbar'],

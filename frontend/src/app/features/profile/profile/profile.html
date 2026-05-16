@@ -5,10 +5,8 @@
 			<span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">pollUnit</span>
 		</div>
 		<nav class="hidden md:flex items-center gap-stack-md h-full">
-			<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full" href="#">Dashboard</a>
-			<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full" href="#">Browse Polls</a>
-			<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full" href="#">My Votes</a>
-			<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full" href="#">Community</a>
+			<a [routerLink]="['/home']" class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full">Dashboard</a>
+			<a [routerLink]="['/home']" class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full">Browse Polls</a>
 		</nav>
 		<div class="flex items-center gap-stack-md">
 			<div class="flex items-center gap-4 text-on-surface-variant">
@@ -28,7 +26,7 @@
 	</div>
 
 	<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-md">
-		<div class="col-span-1 md:col-span-12 bg-surface-container-lowest shadow-level-1 rounded-xl p-stack-md flex flex-col md:flex-row items-start md:items-center gap-stack-md border-t-4 border-primary">
+		<div class="col-span-1 md:col-span-12 bg-surface-container-lowest shadow-level-1 rounded-xl p-stack-md flex flex-col md:flex-row items-start md:items-center gap-stack-md">
 			<div class="h-24 w-24 rounded-full bg-surface-container-low flex items-center justify-center flex-shrink-0">
 				<span class="material-symbols-outlined text-[48px] text-primary" style="font-variation-settings: 'FILL' 1;">badge</span>
 			</div>
@@ -95,12 +93,47 @@
 				<span class="material-symbols-outlined text-outline">security</span>
 				<h3 class="font-headline-md text-headline-md text-on-background">Security &amp; Actions</h3>
 			</div>
+
 			<div class="flex flex-col gap-1.5">
 				<label class="font-label-sm text-label-sm text-outline">Password</label>
-				<div class="bg-surface rounded-lg p-3 font-body-md text-body-md text-on-surface flex items-center justify-between">••••••••••••
-					<button (click)="updatePassword()" class="text-primary font-label-md hover:underline">Update</button>
+				<div class="bg-surface rounded-lg p-3 font-body-md text-body-md text-on-surface flex items-center justify-between">
+					••••••••••••
+					<button (click)="togglePasswordForm()" class="text-primary font-label-md hover:underline">
+						{{ showPasswordForm ? 'Cancel' : 'Update' }}
+					</button>
 				</div>
 			</div>
+
+			<!-- Success message -->
+			<div *ngIf="passwordSuccess" class="text-label-sm font-label-sm text-primary">{{ passwordSuccess }}</div>
+
+			<!-- Inline password form -->
+			<form *ngIf="showPasswordForm" [formGroup]="passwordForm" (ngSubmit)="submitPassword()" class="flex flex-col gap-3">
+				<div class="flex flex-col gap-1">
+					<label class="font-label-sm text-label-sm text-outline">Current Password</label>
+					<input formControlName="currentPassword" type="password"
+						class="bg-surface rounded-lg px-3 py-2.5 font-body-md text-body-md text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-all" />
+				</div>
+				<div class="flex flex-col gap-1">
+					<label class="font-label-sm text-label-sm text-outline">New Password</label>
+					<input formControlName="newPassword" type="password"
+						class="bg-surface rounded-lg px-3 py-2.5 font-body-md text-body-md text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-all" />
+					<span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength'] && passwordForm.get('newPassword')?.touched"
+						class="text-error text-label-sm font-label-sm">Minimum 6 characters.</span>
+				</div>
+				<div class="flex flex-col gap-1">
+					<label class="font-label-sm text-label-sm text-outline">Confirm New Password</label>
+					<input formControlName="confirmPassword" type="password"
+						class="bg-surface rounded-lg px-3 py-2.5 font-body-md text-body-md text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-all" />
+				</div>
+
+				<div *ngIf="passwordError" class="text-error text-label-sm font-label-sm">{{ passwordError }}</div>
+
+				<button type="submit" [disabled]="passwordForm.invalid || passwordSubmitting"
+					class="px-4 py-2.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+					{{ passwordSubmitting ? 'Saving...' : 'Save Password' }}
+				</button>
+			</form>
 		</div>
 	</div>
 </main>
