@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PollsService } from '../../../core/services/polls';
+import { AuthService } from '../../../core/services/auth';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -15,10 +16,20 @@ export class Home implements OnInit {
 
   polls: any[] = [];
 
-  constructor(private pollsService: PollsService, private snackBar: MatSnackBar) {}
+  constructor(
+    private pollsService: PollsService,
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     this.getPolls();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   getPolls() {

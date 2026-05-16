@@ -34,7 +34,7 @@ export class VotesService {
 
         const option = await this.pollsOptionRepository.findOne({
             where:{
-                id:dto.OptionId,
+                id:dto.optionId,
                 poll:{id:dto.pollId}
             }
         })

@@ -22,6 +22,21 @@ export class UsersService {
         return this.userRepository.findOne({ where: { id } })
     }
 
+    async getMe(id: number) {
+        const user = await this.userRepository.findOne({
+            where: { id },
+            relations: ['votes'],
+        });
+        if (!user) return null;
+        const { password, votes, ...rest } = user;
+        return {
+            ...rest,
+            voterId: `NG-${String(user.id).padStart(4, '0')}`,
+            verified: true,
+            totalPollsParticipated: votes.length,
+        };
+    }
+
     async create(dto:SignUpDto){
         const user = this.userRepository.create(dto)
         return this.userRepository.save(user)

@@ -5,5 +5,5 @@ export class castVotesDto{
     pollId!:number
 
     @IsNotEmpty()
-    OptionId!:number
+    optionId!:number
 }

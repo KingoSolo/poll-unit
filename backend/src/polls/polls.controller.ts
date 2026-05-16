@@ -19,7 +19,7 @@ export class PollsController {
     @UseGuards(RolesGuard)
     @Roles(UserRole.ADMIN)
     create(@Body() createPollsDto:CreatePollsDto, @CurrentUser() user:any){
-        return this.pollsService.create(createPollsDto,user.userId)
+        return this.pollsService.create(createPollsDto,user.id)
     }
 
     @Get()

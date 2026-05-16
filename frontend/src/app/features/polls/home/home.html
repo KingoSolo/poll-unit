@@ -8,11 +8,11 @@
       </div>
      
       <div class="flex items-center gap-stack-md">
-        <button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition-colors text-on-surface-variant">
+        <button (click)="logout()" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition-colors text-on-surface-variant">
           <mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
         </button>
-        <div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer hover:opacity-80 transition-opacity">
-          <img alt="User Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7TIec-mchA_t-4zs1bkNEIX8AWRSfIZyA7KcTX5rBaDrrq7fVbWReEMHXVigHKLheAiBd_5yDBxfZVU5s3RI7LY_iieFo8huMVYIQD5zK86CzWdN-_HZTwHydQKRJZjzIwx3MlkkQB3mEBF3ZvnzjDqeI8OhDYnH8zyyGTpib-7LXMvRNs8eH0_TB4f9fg-kCICUoxbzRq8HV0fNC7Sjws1MnjrE_aNwhZ6Jr_j75IaAV9z-rIxR8kmP9TO2DiAsfqqsiBPkYTWg"/>
+        <div [routerLink]="['/profile']" class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer hover:opacity-80 transition-opacity bg-surface-container-high flex items-center justify-center">
+          <mat-icon fontSet="material-symbols-outlined" class="text-on-surface-variant">person</mat-icon>
         </div>
       </div>
     </div>
@@ -67,7 +67,7 @@
                 +{{ poll.participants.length - 3 }}
               </div>
             </div>
-            <button class="px-6 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-surface-tint transition-colors flex items-center gap-2">
+            <button [routerLink]="poll.status === 'active' ? ['/polls', poll.id] : ['/polls', poll.id, 'results']" class="px-6 py-2 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:bg-surface-tint transition-colors flex items-center gap-2">
               {{ poll.status === 'active' ? 'View Poll' : 'View Results' }}
               <mat-icon fontSet="material-symbols-outlined" class="text-[18px]">arrow_forward</mat-icon>
             </button>

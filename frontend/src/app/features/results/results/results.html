@@ -1,1 +1,94 @@
-<p>results works!</p>
+<div class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased">
+
+  <!-- Header -->
+  <header class="bg-surface border-b border-outline-variant w-full top-0 z-50">
+    <div class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max mx-auto">
+      <div class="flex items-center gap-stack-sm">
+        <span class="material-symbols-outlined text-primary text-3xl">how_to_vote</span>
+        <span class="text-headline-md font-headline-md font-bold text-primary">pollUnit</span>
+      </div>
+      <button [routerLink]="['/home']" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md">
+        <mat-icon fontSet="material-symbols-outlined" class="text-[18px]">arrow_back</mat-icon>
+        Back to Polls
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-grow w-full max-w-container-max mx-auto px-gutter py-stack-lg flex flex-col gap-stack-lg">
+
+    <!-- Poll title -->
+    <div *ngIf="poll" class="flex flex-col gap-2">
+      <div class="flex items-center gap-3 flex-wrap">
+        <h1 class="text-headline-xl font-headline-xl text-on-background">{{ poll.title }}</h1>
+        <span [class]="'px-3 py-1 rounded-full text-label-sm font-label-sm uppercase tracking-wider ' +
+          (poll.status === 'active' ? 'bg-tertiary-fixed text-primary-fixed-variant' : 'bg-surface-container-high text-on-surface-variant')">
+          {{ poll.status }}
+        </span>
+      </div>
+      <p class="text-body-lg font-body-lg text-on-surface-variant">{{ poll.description }}</p>
+    </div>
+
+    <!-- Filter + total -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-stack-md">
+      <div class="flex items-center gap-2 text-on-surface-variant">
+        <mat-icon fontSet="material-symbols-outlined" class="text-[18px]">how_to_vote</mat-icon>
+        <span class="text-body-md font-body-md">
+          <span class="font-semibold text-on-surface">{{ totalVotes }}</span> total votes
+          <span *ngIf="filterForm.get('state')?.value"> in {{ filterForm.get('state')?.value }}</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2" [formGroup]="filterForm">
+        <mat-icon fontSet="material-symbols-outlined" class="text-on-surface-variant text-[18px]">filter_list</mat-icon>
+        <select formControlName="state"
+          class="bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-body-md font-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+          <option value="">All States</option>
+          <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="flex flex-col gap-stack-md">
+
+      <div *ngIf="loading" class="flex items-center justify-center py-16 text-on-surface-variant">
+        Loading results...
+      </div>
+
+      <ng-container *ngIf="!loading">
+        <div *ngIf="results.length === 0" class="flex flex-col items-center justify-center py-16 gap-3 text-on-surface-variant">
+          <mat-icon fontSet="material-symbols-outlined" class="text-[48px]">ballot</mat-icon>
+          <p class="text-body-lg font-body-lg">No votes recorded{{ filterForm.get('state')?.value ? ' for ' + filterForm.get('state')?.value : '' }}.</p>
+        </div>
+
+        <div *ngFor="let result of results; let i = index"
+          class="bg-surface-container-lowest rounded-xl shadow-level-1 p-stack-md flex flex-col gap-3">
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-label-md font-label-md text-on-primary-container font-bold flex-shrink-0">
+                {{ i + 1 }}
+              </div>
+              <span class="text-body-lg font-body-lg text-on-surface font-medium">{{ result.optionText }}</span>
+            </div>
+            <div class="flex items-center gap-3 flex-shrink-0">
+              <span class="text-headline-md font-headline-md text-primary font-bold">{{ getPercentage(result.voteCount) }}%</span>
+              <span class="text-body-sm font-body-sm text-on-surface-variant">{{ result.voteCount }} votes</span>
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="w-full bg-surface-container-high rounded-full h-3">
+            <div class="bg-primary h-3 rounded-full transition-all duration-500"
+              [style.width.%]="getPercentage(result.voteCount)">
+            </div>
+          </div>
+
+        </div>
+      </ng-container>
+
+    </div>
+
+  </main>
+
+</div>

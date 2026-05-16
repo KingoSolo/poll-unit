@@ -45,4 +45,8 @@ export class AuthService {
     const user = this.getCurrentUser()
     return user?.role === 'admin'
   }
+
+  getMe() {
+    return this.http.get(`${this.baseUrl}/users/me`);
+  }
 }
