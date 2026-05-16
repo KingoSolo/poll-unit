@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { PollsService } from '../../core/services/polls';
 import { AuthService } from '../../core/services/auth';
@@ -10,17 +9,16 @@ import { AuthService } from '../../core/services/auth';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, MatIconModule, MatSnackBarModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, MatSnackBarModule],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
 export class Admin implements OnInit {
   polls: any[] = [];
-  view: 'list' | 'form' = 'list';
+  view: 'manage' | 'create' | 'edit' = 'manage';
   editingPoll: any = null;
   loading = false;
   submitting = false;
-
   pollForm!: FormGroup;
 
   constructor(
@@ -28,15 +26,31 @@ export class Admin implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: object
   ) {}
 
   ngOnInit() {
-    this.loadPolls();
+    this.initForm();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadPolls();
+    }
   }
 
   get options(): FormArray {
     return this.pollForm.get('options') as FormArray;
+  }
+
+  initForm(poll?: any) {
+    this.pollForm = this.fb.group({
+      title: [poll?.title ?? '', Validators.required],
+      description: [poll?.description ?? '', Validators.required],
+      options: this.fb.array(
+        poll?.options?.map((o: any) => this.fb.control(o.optionText, Validators.required))
+        ?? [this.fb.control('', Validators.required), this.fb.control('', Validators.required)]
+      ),
+    });
   }
 
   loadPolls() {
@@ -45,34 +59,24 @@ export class Admin implements OnInit {
       next: (res: any) => {
         this.polls = res;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => { this.loading = false; },
     });
   }
 
-  openCreate() {
-    this.editingPoll = null;
-    this.pollForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-      options: this.fb.array([
-        this.fb.control('', Validators.required),
-        this.fb.control('', Validators.required),
-      ]),
-    });
-    this.view = 'form';
+  goTo(view: 'manage' | 'create' | 'edit') {
+    if (view === 'create') {
+      this.editingPoll = null;
+      this.initForm();
+    }
+    this.view = view;
   }
 
   openEdit(poll: any) {
     this.editingPoll = poll;
-    this.pollForm = this.fb.group({
-      title: [poll.title, Validators.required],
-      description: [poll.description, Validators.required],
-      options: this.fb.array(
-        poll.options.map((o: any) => this.fb.control(o.optionText, Validators.required))
-      ),
-    });
-    this.view = 'form';
+    this.initForm(poll);
+    this.view = 'edit';
   }
 
   addOption() {
@@ -103,21 +107,17 @@ export class Admin implements OnInit {
 
     request$.subscribe({
       next: () => {
-        this.snackBar.open(
-          this.editingPoll ? 'Poll updated' : 'Poll created',
-          'Close',
-          { duration: 3000, horizontalPosition: 'right', verticalPosition: 'top' }
-        );
+        this.snackBar.open(this.editingPoll ? 'Poll updated' : 'Poll created', 'Close', {
+          duration: 3000, horizontalPosition: 'right', verticalPosition: 'top',
+        });
         this.submitting = false;
-        this.view = 'list';
+        this.editingPoll = null;
+        this.view = 'manage';
         this.loadPolls();
       },
       error: (err) => {
         this.snackBar.open(err?.error?.message || 'Something went wrong', 'Close', {
-          duration: 4000,
-          panelClass: ['error-snackbar'],
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
+          duration: 4000, panelClass: ['error-snackbar'], horizontalPosition: 'right', verticalPosition: 'top',
         });
         this.submitting = false;
       },
@@ -159,10 +159,5 @@ export class Admin implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
-  }
-
-  cancel() {
-    this.view = 'list';
-    this.editingPoll = null;
   }
 }

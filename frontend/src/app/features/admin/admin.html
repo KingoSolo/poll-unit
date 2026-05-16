@@ -1,185 +1,219 @@
-<div class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased">
+<div class="bg-background text-on-background font-body-md antialiased min-h-screen flex">
 
-  <!-- Header -->
-  <header class="bg-surface border-b border-outline-variant w-full top-0 z-50">
-    <div class="flex justify-between items-center px-gutter py-4 w-full max-w-container-max mx-auto">
-      <div class="flex items-center gap-stack-sm">
-        <span class="material-symbols-outlined text-primary text-3xl">how_to_vote</span>
-        <span class="text-headline-md font-headline-md font-bold text-primary">pollUnit</span>
-        <span class="ml-2 px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container text-label-sm font-label-sm">Admin</span>
-      </div>
-      <div class="flex items-center gap-stack-md">
-        <button [routerLink]="['/home']" class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md">
-          View Polls
-        </button>
-        <button (click)="logout()" class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md">
-          Log Out
-        </button>
+  <!-- Sidebar -->
+  <aside class="bg-surface-container-low border-r border-outline-variant h-screen w-64 flex flex-col py-stack-md px-4 flex-shrink-0 sticky top-0 hidden md:flex">
+    <div class="mb-stack-lg flex items-center gap-3 px-2">
+      <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1;">how_to_vote</span>
+      <div>
+        <h2 class="text-headline-md font-headline-md font-bold text-primary">pollUnit</h2>
+        <p class="font-label-sm text-label-sm text-on-surface-variant">System Oversight</p>
       </div>
     </div>
-  </header>
 
-  <main class="flex-grow w-full max-w-container-max mx-auto px-gutter py-stack-lg flex flex-col gap-stack-lg">
+    <nav class="flex-grow flex flex-col gap-1">
+      <button (click)="goTo('manage')"
+        [class]="'flex items-center gap-3 px-4 py-3 rounded-lg font-label-md text-label-md w-full text-left transition-all ' +
+          (view === 'manage' ? 'bg-secondary-container text-on-secondary-container font-semibold' : 'text-on-surface-variant hover:bg-surface-container-high')">
+        <span class="material-symbols-outlined text-[22px]" [style]="view === 'manage' ? 'font-variation-settings:\'FILL\' 1' : 'font-variation-settings:\'FILL\' 0'">ballot</span>
+        Manage Polls
+      </button>
 
-    <!-- ── LIST VIEW ── -->
-    <ng-container *ngIf="view === 'list'">
+      <button (click)="goTo('create')"
+        [class]="'flex items-center gap-3 px-4 py-3 rounded-lg font-label-md text-label-md w-full text-left transition-all ' +
+          (view === 'create' || view === 'edit' ? 'bg-secondary-container text-on-secondary-container font-semibold' : 'text-on-surface-variant hover:bg-surface-container-high')">
+        <span class="material-symbols-outlined text-[22px]" [style]="view === 'create' || view === 'edit' ? 'font-variation-settings:\'FILL\' 1' : 'font-variation-settings:\'FILL\' 0'">add_circle</span>
+        {{ view === 'edit' ? 'Edit Poll' : 'Create Poll' }}
+      </button>
 
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-headline-xl font-headline-xl text-on-background">Poll Management</h1>
-          <p class="text-body-md font-body-md text-on-surface-variant mt-1">Create, edit, close, and delete polls.</p>
+      <button [routerLink]="['/home']"
+        class="flex items-center gap-3 px-4 py-3 rounded-lg font-label-md text-label-md w-full text-left text-on-surface-variant hover:bg-surface-container-high transition-all">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0">dashboard</span>
+        View Polls
+      </button>
+    </nav>
+
+    <div class="mt-auto pt-stack-md border-t border-outline-variant/30">
+      <button (click)="logout()"
+        class="flex items-center gap-3 px-4 py-3 rounded-lg font-label-md text-label-md w-full text-left text-on-surface-variant hover:bg-surface-container-high transition-all">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0">logout</span>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-grow flex flex-col overflow-y-auto">
+
+    <!-- Mobile top bar -->
+    <header class="md:hidden flex items-center justify-between p-4 bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-20">
+      <span class="text-headline-md font-headline-md font-bold text-primary">pollUnit</span>
+      <div class="flex gap-3">
+        <button (click)="goTo('manage')" class="text-on-surface-variant text-label-md font-label-md hover:text-primary transition-colors">Polls</button>
+        <button (click)="goTo('create')" class="text-on-surface-variant text-label-md font-label-md hover:text-primary transition-colors">Create</button>
+        <button (click)="logout()" class="text-on-surface-variant text-label-md font-label-md hover:text-primary transition-colors">Logout</button>
+      </div>
+    </header>
+
+    <div class="max-w-[800px] w-full mx-auto px-4 md:px-gutter py-stack-lg flex-grow">
+
+      <!-- ── MANAGE POLLS VIEW ── -->
+      <ng-container *ngIf="view === 'manage'">
+        <div class="mb-stack-md">
+          <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Manage Polls</h1>
+          <p class="font-body-md text-body-md text-on-surface-variant">Edit, close, delete, and view results for your polls.</p>
         </div>
-        <button (click)="openCreate()"
-          class="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:opacity-90 transition-opacity">
-          <mat-icon fontSet="material-symbols-outlined" class="text-[18px]">add</mat-icon>
-          Create Poll
-        </button>
-      </div>
 
-      <!-- Loading -->
-      <div *ngIf="loading" class="flex items-center justify-center py-16 text-on-surface-variant">
-        Loading polls...
-      </div>
+        <div *ngIf="loading" class="flex items-center justify-center py-16 text-on-surface-variant">
+          Loading polls...
+        </div>
 
-      <!-- Empty -->
-      <div *ngIf="!loading && polls.length === 0"
-        class="flex flex-col items-center justify-center py-16 gap-3 text-on-surface-variant">
-        <mat-icon fontSet="material-symbols-outlined" class="text-[48px]">ballot</mat-icon>
-        <p class="text-body-lg font-body-lg">No polls yet. Create one to get started.</p>
-      </div>
+        <div *ngIf="!loading && polls.length === 0" class="flex flex-col items-center justify-center py-16 gap-3 text-on-surface-variant">
+          <span class="material-symbols-outlined text-[48px]">ballot</span>
+          <p class="font-body-lg text-body-lg">No polls yet.</p>
+          <button (click)="goTo('create')" class="px-5 py-2.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+            Create your first poll
+          </button>
+        </div>
 
-      <!-- Poll list -->
-      <div *ngIf="!loading && polls.length > 0" class="flex flex-col gap-stack-md">
-        <div *ngFor="let poll of polls"
-          class="bg-surface-container-lowest rounded-xl shadow-level-1 p-stack-md flex flex-col gap-3">
+        <div *ngIf="!loading && polls.length > 0" class="flex flex-col gap-stack-md">
+          <div *ngFor="let poll of polls" class="bg-surface-container-lowest rounded-xl shadow-level-1 relative overflow-hidden flex flex-col gap-3 p-stack-md">
+            <div class="absolute top-0 left-0 w-full h-1" [class]="poll.status === 'active' ? 'bg-primary' : 'bg-outline-variant'"></div>
 
-          <!-- Title row -->
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex flex-col gap-1">
-              <div class="flex items-center gap-3 flex-wrap">
-                <h2 class="text-headline-md font-headline-md text-on-surface">{{ poll.title }}</h2>
-                <span [class]="'px-2.5 py-0.5 rounded-full text-label-sm font-label-sm uppercase tracking-wider ' +
-                  (poll.status === 'active' ? 'bg-tertiary-fixed text-primary-fixed-variant' : 'bg-surface-container-high text-on-surface-variant')">
-                  {{ poll.status }}
-                </span>
+            <div class="flex items-start justify-between gap-4 pt-1">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-3 flex-wrap">
+                  <h2 class="font-headline-md text-headline-md text-on-surface">{{ poll.title }}</h2>
+                  <span [class]="'px-2.5 py-0.5 rounded-full text-label-sm font-label-sm uppercase tracking-wider ' +
+                    (poll.status === 'active' ? 'bg-tertiary-fixed text-primary-fixed-variant' : 'bg-surface-container-high text-on-surface-variant')">
+                    {{ poll.status }}
+                  </span>
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">{{ poll.description }}</p>
               </div>
-              <p class="text-body-md font-body-md text-on-surface-variant line-clamp-2">{{ poll.description }}</p>
             </div>
-          </div>
 
-          <!-- Options preview -->
-          <div class="flex flex-wrap gap-2">
-            <span *ngFor="let opt of poll.options"
-              class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm">
-              {{ opt.optionText }}
-            </span>
-          </div>
+            <div class="flex flex-wrap gap-2">
+              <span *ngFor="let opt of poll.options"
+                class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant text-label-sm font-label-sm">
+                {{ opt.optionText }}
+              </span>
+            </div>
 
-          <!-- Actions -->
-          <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-outline-variant/30">
-            <button (click)="viewResults(poll)"
-              class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-primary hover:bg-primary-container transition-colors">
-              <mat-icon fontSet="material-symbols-outlined" class="text-[16px]">bar_chart</mat-icon>
-              Results
-            </button>
-
-            <button (click)="openEdit(poll)" [disabled]="poll.status !== 'active'"
-              class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-              <mat-icon fontSet="material-symbols-outlined" class="text-[16px]">edit</mat-icon>
-              Edit
-            </button>
-
-            <button (click)="closePoll(poll)" [disabled]="poll.status !== 'active'"
-              class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-              <mat-icon fontSet="material-symbols-outlined" class="text-[16px]">lock</mat-icon>
-              Close
-            </button>
-
-            <button (click)="deletePoll(poll)"
-              class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-error hover:bg-error-container transition-colors ml-auto">
-              <mat-icon fontSet="material-symbols-outlined" class="text-[16px]">delete</mat-icon>
-              Delete
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-    </ng-container>
-
-    <!-- ── FORM VIEW ── -->
-    <ng-container *ngIf="view === 'form'">
-
-      <div class="flex items-center gap-3">
-        <button (click)="cancel()" class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
-          <mat-icon fontSet="material-symbols-outlined" class="text-[18px]">arrow_back</mat-icon>
-        </button>
-        <h1 class="text-headline-xl font-headline-xl text-on-background">
-          {{ editingPoll ? 'Edit Poll' : 'Create Poll' }}
-        </h1>
-      </div>
-
-      <form [formGroup]="pollForm" (ngSubmit)="submitForm()"
-        class="bg-surface-container-lowest rounded-xl shadow-level-1 p-stack-md flex flex-col gap-stack-md max-w-2xl">
-
-        <!-- Title -->
-        <div class="flex flex-col gap-1.5">
-          <label class="text-label-sm font-label-sm text-outline">Title</label>
-          <input formControlName="title" type="text" placeholder="Enter poll title"
-            class="bg-surface rounded-lg px-4 py-3 text-body-md font-body-md text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-all" />
-          <span *ngIf="pollForm.get('title')?.invalid && pollForm.get('title')?.touched"
-            class="text-error text-label-sm font-label-sm">Title is required.</span>
-        </div>
-
-        <!-- Description -->
-        <div class="flex flex-col gap-1.5">
-          <label class="text-label-sm font-label-sm text-outline">Description</label>
-          <textarea formControlName="description" rows="3" placeholder="Describe this poll"
-            class="bg-surface rounded-lg px-4 py-3 text-body-md font-body-md text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"></textarea>
-          <span *ngIf="pollForm.get('description')?.invalid && pollForm.get('description')?.touched"
-            class="text-error text-label-sm font-label-sm">Description is required.</span>
-        </div>
-
-        <!-- Options -->
-        <div class="flex flex-col gap-3">
-          <div class="flex items-center justify-between">
-            <label class="text-label-sm font-label-sm text-outline">Options (2–4)</label>
-            <button type="button" (click)="addOption()" [disabled]="options.length >= 4"
-              class="flex items-center gap-1 text-primary text-label-sm font-label-sm hover:underline disabled:opacity-40 disabled:cursor-not-allowed">
-              <mat-icon fontSet="material-symbols-outlined" class="text-[16px]">add</mat-icon>
-              Add option
-            </button>
-          </div>
-
-          <div formArrayName="options" class="flex flex-col gap-2">
-            <div *ngFor="let ctrl of options.controls; let i = index" class="flex items-center gap-2">
-              <span class="text-label-sm font-label-sm text-outline w-5 text-center flex-shrink-0">{{ i + 1 }}</span>
-              <input [formControlName]="i" type="text" [placeholder]="'Option ' + (i + 1)"
-                class="flex-1 bg-surface rounded-lg px-4 py-2.5 text-body-md font-body-md text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-all" />
-              <button type="button" (click)="removeOption(i)" [disabled]="options.length <= 2"
-                class="text-on-surface-variant hover:text-error transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-                <mat-icon fontSet="material-symbols-outlined" class="text-[18px]">remove_circle_outline</mat-icon>
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/30">
+              <button (click)="viewResults(poll)"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-primary hover:bg-surface-container-low transition-colors">
+                <span class="material-symbols-outlined text-[16px]">bar_chart</span>
+                Results
+              </button>
+              <button (click)="openEdit(poll)" [disabled]="poll.status !== 'active'"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined text-[16px]">edit</span>
+                Edit
+              </button>
+              <button (click)="closePoll(poll)" [disabled]="poll.status !== 'active'"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined text-[16px]">lock</span>
+                Close
+              </button>
+              <button (click)="deletePoll(poll)"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-error hover:bg-error-container transition-colors ml-auto">
+                <span class="material-symbols-outlined text-[16px]">delete</span>
+                Delete
               </button>
             </div>
           </div>
         </div>
+      </ng-container>
 
-        <!-- Actions -->
-        <div class="flex items-center gap-3 pt-2">
-          <button type="submit" [disabled]="pollForm.invalid || submitting"
-            class="px-6 py-2.5 bg-primary text-on-primary rounded-lg text-label-md font-label-md hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
-            {{ submitting ? 'Saving...' : (editingPoll ? 'Save Changes' : 'Create Poll') }}
-          </button>
-          <button type="button" (click)="cancel()"
-            class="px-6 py-2.5 text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md">
-            Cancel
-          </button>
+      <!-- ── CREATE / EDIT FORM VIEW ── -->
+      <ng-container *ngIf="view === 'create' || view === 'edit'">
+        <div class="mb-stack-md">
+          <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">
+            {{ view === 'edit' ? 'Edit Poll' : 'Create New Poll' }}
+          </h1>
+          <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+            {{ view === 'edit' ? 'Update the poll details below.' : 'Design a new poll to gather civic insights. Formulate clear questions and options to ensure high engagement.' }}
+          </p>
         </div>
 
-      </form>
+        <div class="bg-surface-container-lowest rounded-xl shadow-level-1 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
 
-    </ng-container>
+          <form [formGroup]="pollForm" (ngSubmit)="submitForm()" class="p-6 md:p-stack-md flex flex-col gap-stack-md">
 
+            <!-- Title -->
+            <div class="flex flex-col gap-1">
+              <label class="font-label-md text-label-md text-on-surface-variant pl-1">
+                Poll Title <span class="text-error">*</span>
+              </label>
+              <input formControlName="title" type="text" placeholder="e.g., Best candidate for Lagos governor"
+                class="w-full bg-surface text-on-surface font-body-md text-body-md rounded-lg p-4 outline-none focus:ring-2 focus:ring-primary transition-all border-none placeholder:text-outline" />
+              <span *ngIf="pollForm.get('title')?.invalid && pollForm.get('title')?.touched"
+                class="text-error text-label-sm font-label-sm pl-1">Title is required.</span>
+            </div>
+
+            <!-- Description -->
+            <div class="flex flex-col gap-1">
+              <label class="font-label-md text-label-md text-on-surface-variant pl-1">Description</label>
+              <textarea formControlName="description" rows="3"
+                placeholder="Provide context or instructions for participants..."
+                class="w-full bg-surface text-on-surface font-body-md text-body-md rounded-lg p-4 outline-none focus:ring-2 focus:ring-primary transition-all border-none placeholder:text-outline resize-y"></textarea>
+              <span *ngIf="pollForm.get('description')?.invalid && pollForm.get('description')?.touched"
+                class="text-error text-label-sm font-label-sm pl-1">Description is required.</span>
+            </div>
+
+            <hr class="border-t border-outline-variant/30" />
+
+            <!-- Options -->
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-headline-md text-[18px] text-on-surface font-semibold">Response Options</h3>
+                <span class="font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed-variant px-2 py-1 rounded-full">
+                  {{ options.length }}/4 options
+                </span>
+              </div>
+
+              <div formArrayName="options" class="flex flex-col gap-3">
+                <div *ngFor="let ctrl of options.controls; let i = index" class="flex items-center gap-3 group">
+                  <div class="flex-shrink-0 text-outline p-1">
+                    <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
+                  </div>
+                  <input [formControlName]="i" type="text" [placeholder]="'Option ' + (i + 1)"
+                    class="flex-grow bg-surface text-on-surface font-body-md text-body-md rounded-lg p-3 outline-none focus:ring-2 focus:ring-primary transition-all border-none" />
+                  <button type="button" (click)="removeOption(i)" [disabled]="options.length <= 2"
+                    class="flex-shrink-0 text-outline hover:text-error transition-colors p-2 rounded-full hover:bg-error-container/50 disabled:opacity-30 disabled:cursor-not-allowed">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                  </button>
+                </div>
+              </div>
+
+              <div *ngIf="options.length < 4" class="pl-9">
+                <button type="button" (click)="addOption()"
+                  class="inline-flex items-center gap-2 text-primary font-label-md text-label-md px-3 py-2 rounded-lg hover:bg-surface-container-low transition-colors">
+                  <span class="material-symbols-outlined text-[18px]">add</span>
+                  Add Option
+                </button>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-4 pt-stack-sm border-t border-outline-variant/30">
+              <button type="button" (click)="goTo('manage')"
+                class="px-6 py-3 font-label-md text-label-md text-on-surface-variant border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors">
+                Cancel
+              </button>
+              <button type="submit" [disabled]="pollForm.invalid || submitting"
+                class="px-6 py-3 font-label-md text-label-md bg-primary text-on-primary rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                {{ submitting ? 'Saving...' : (view === 'edit' ? 'Save Changes' : 'Create Poll') }}
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </ng-container>
+
+    </div>
   </main>
 
 </div>
