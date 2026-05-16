@@ -1,0 +1,16 @@
+# Root gitignore for poll-voting-system
+# Node
+node_modules/
+dist/
+
+# Environment and local settings
+.env
+.env.local
+.env.*.local
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Claude assistant files (do not commit)
+

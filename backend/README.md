@@ -96,3 +96,16 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Environment
+
+- Copy `backend/.env.example` to `backend/.env` and fill in real values before running the server.
+- Do NOT commit `backend/.env` into source control — it should contain secrets (DB password, `JWT_SECRET`).
+- The `JWT_SECRET` environment variable is required for authentication to work; the server may fail to start or authentication will be insecure without it.
+
+Example:
+
+```sh
+cp backend/.env.example backend/.env
+# edit backend/.env to set DATABASE_PASSWORD and JWT_SECRET
+```
