@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Location } from '@angular/common';
 import { PollsService } from '../../../core/services/polls';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -32,16 +33,25 @@ export class Results implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private pollsService: PollsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private location: Location,
+    @Inject(PLATFORM_ID) private platformId: object
   ) {}
+
+  goBack() {
+    this.location.back();
+  }
 
   ngOnInit() {
     this.pollId = Number(this.route.snapshot.paramMap.get('id'));
-
     this.filterForm = this.fb.group({ state: [''] });
 
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.pollsService.getPoll(this.pollId).subscribe({
-      next: (res: any) => { this.poll = res; },
+      next: (res: any) => {
+        setTimeout(() => { this.poll = res; }, 0);
+      },
     });
 
     this.getResults();
@@ -55,10 +65,14 @@ export class Results implements OnInit {
     this.loading = true;
     this.pollsService.getResults(this.pollId, state).subscribe({
       next: (res: any) => {
-        this.results = res;
-        this.loading = false;
+        setTimeout(() => {
+          this.results = res;
+          this.loading = false;
+        }, 0);
       },
-      error: () => { this.loading = false; },
+      error: () => {
+        setTimeout(() => { this.loading = false; }, 0);
+      },
     });
   }
 
