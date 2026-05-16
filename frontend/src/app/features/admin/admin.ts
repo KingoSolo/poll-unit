@@ -15,7 +15,7 @@ import { AuthService } from '../../core/services/auth';
 })
 export class Admin implements OnInit {
   polls: any[] = [];
-  view: 'manage' | 'create' | 'edit' = 'manage';
+  view: 'manage' | 'create' | 'edit' | 'results' = 'manage';
   editingPoll: any = null;
   loading = false;
   submitting = false;
@@ -65,7 +65,7 @@ export class Admin implements OnInit {
     });
   }
 
-  goTo(view: 'manage' | 'create' | 'edit') {
+  goTo(view: 'manage' | 'create' | 'edit' | 'results') {
     if (view === 'create') {
       this.editingPoll = null;
       this.initForm();
