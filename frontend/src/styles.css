@@ -1,3 +1,18 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@100..700,0..1,-50..200,20..48');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.success-snackbar {
+	--mdc-snackbar-container-color: #166534;
+	--mdc-snackbar-supporting-text-color: #ffffff;
+	--mat-snack-bar-button-color: #dcfce7;
+}
+
+.error-snackbar {
+	--mdc-snackbar-container-color: #b91c1c;
+	--mdc-snackbar-supporting-text-color: #ffffff;
+	--mat-snack-bar-button-color: #fee2e2;
+}

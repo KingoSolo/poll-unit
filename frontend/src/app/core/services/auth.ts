@@ -1,18 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:3000/api/v1'
+  private baseUrl = environment.apiUrl || 'http://localhost:3000'
   constructor(private http:HttpClient){}
 
   signup(data:any){
     return this.http.post(`${this.baseUrl}/auth/signup`,data)
   }
-
+  
   login(data:any){
     return this.http.post(`${this.baseUrl}/auth/login`,data)
   }
@@ -33,7 +34,7 @@ export class AuthService {
     return !!this.getToken()
   }
 
-  getCurrentuser():any{
+  getCurrentUser():any{
     const token = this.getToken()
     if(!token) return null 
     
@@ -41,7 +42,7 @@ export class AuthService {
   }
 
   isAdmin():boolean{
-    const user = this.getCurrentuser()
+    const user = this.getCurrentUser()
     return user?.role === 'admin'
   }
 }

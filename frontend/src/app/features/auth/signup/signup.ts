@@ -9,11 +9,13 @@ import {
 import { AuthService } from '../../../core/services/auth';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @Component({
   selector: 'app-signup',
-  imports: [ReactiveFormsModule, CommonModule, RouterModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule, MatIconModule, MatSnackBarModule],
   templateUrl: './signup.html',
   styleUrls: ['./signup.scss'],
 })
@@ -23,7 +25,8 @@ export class Signup implements OnInit{
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
 states = [
@@ -58,13 +61,23 @@ states = [
 
         next: () => {
 
-          console.log('Signup successful');
+          this.snackBar.open('Signup successful', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar'],
+          });
 
           this.router.navigate(['/login']);
         },
 
         error: (err) => {
-          console.log(err.error.message);
+          this.snackBar.open(err?.error?.message || 'Signup failed', 'Close', {
+            duration: 4000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar'],
+          });
         }
 
       });

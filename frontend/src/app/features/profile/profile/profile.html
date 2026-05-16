@@ -1,0 +1,127 @@
+<!-- Profile Page Component -->
+<!-- Adapted from provided markup: only component body content is included -->
+<!-- TopAppBar and page canvas are included here for standalone view; adjust if shared layout exists -->
+<header class="bg-surface-container-lowest shadow-sm docked full-width top-0 z-50">
+	<div class="flex justify-between items-center max-w-[1280px] mx-auto px-margin-mobile md:px-gutter h-16 w-full">
+		<div class="flex items-center gap-2">
+			<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">how_to_vote</span>
+			<span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">pollUnit</span>
+		</div>
+		<nav class="hidden md:flex items-center gap-stack-md h-full">
+			<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full" href="#">Dashboard</a>
+			<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full" href="#">Browse Polls</a>
+			<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full" href="#">My Votes</a>
+			<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200 flex items-center h-full" href="#">Community</a>
+		</nav>
+		<div class="flex items-center gap-stack-md">
+			<div class="flex items-center gap-4 text-on-surface-variant">
+				<button class="hover:text-primary transition-colors duration-200 active:scale-95 flex items-center justify-center">
+					<span class="material-symbols-outlined">notifications</span>
+				</button>
+				<button class="text-primary hover:text-primary transition-colors duration-200 active:scale-95 flex items-center justify-center">
+					<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+				</button>
+			</div>
+			<button class="hidden md:block font-label-md text-label-md text-outline hover:text-primary transition-colors duration-200">Log Out</button>
+		</div>
+	</div>
+</header>
+
+<main class="flex-grow max-w-[1280px] w-full mx-auto px-margin-mobile md:px-gutter py-stack-lg flex flex-col gap-stack-md">
+	<div class="pb-stack-sm">
+		<h1 class="font-headline-lg text-headline-lg text-on-background">My Profile</h1>
+		<p class="font-body-md text-body-md text-on-surface-variant mt-2">Manage your personal information, residency details, and account security.</p>
+	</div>
+
+	<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-md">
+		<div class="col-span-1 md:col-span-12 bg-surface-container-lowest shadow-level-1 rounded-xl p-stack-md flex flex-col md:flex-row items-start md:items-center gap-stack-md border-t-4 border-primary">
+			<div class="h-24 w-24 rounded-full bg-surface-container-low flex items-center justify-center flex-shrink-0">
+				<span class="material-symbols-outlined text-[48px] text-primary" style="font-variation-settings: 'FILL' 1;">badge</span>
+			</div>
+			<div class="flex flex-col gap-2">
+				<h2 class="font-headline-lg text-headline-lg text-on-background">Chinedu Okafor</h2>
+				<div class="flex items-center gap-2 mt-1">
+					<div class="bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full px-3 py-1.5 flex items-center gap-1.5">
+						<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+						<span class="font-label-sm text-label-sm">Verified Citizen</span>
+					</div>
+					<span class="font-body-md text-body-md text-outline px-2">•</span>
+					<span class="font-body-md text-body-md text-on-surface-variant">Voter ID: NG-8820-XL</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-span-1 md:col-span-7 bg-surface-container-lowest shadow-level-1 rounded-xl p-stack-md flex flex-col gap-stack-md">
+			<div class="flex items-center gap-2 border-b border-surface-variant pb-4">
+				<span class="material-symbols-outlined text-outline">person_outline</span>
+				<h3 class="font-headline-md text-headline-md text-on-background">Account Information</h3>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-stack-md pt-2">
+				<div class="flex flex-col gap-1.5">
+					<label class="font-label-sm text-label-sm text-outline">Full Name</label>
+					<div class="bg-surface rounded-lg p-3 font-body-md text-body-md text-on-surface flex items-center">Chinedu Okafor</div>
+				</div>
+				<div class="flex flex-col gap-1.5">
+					<label class="font-label-sm text-label-sm text-outline">Email Address</label>
+					<div class="bg-surface rounded-lg p-3 font-body-md text-body-md text-on-surface flex items-center">chinedu.o@example.com</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-span-1 md:col-span-5 flex flex-col gap-stack-md">
+			<div class="bg-surface-container-lowest shadow-level-1 rounded-xl p-stack-md flex-grow flex flex-col justify-center">
+				<div class="flex items-center gap-2 mb-4">
+					<div class="h-8 w-8 rounded-full bg-surface-container-highest flex items-center justify-center">
+						<span class="material-symbols-outlined text-[18px] text-primary">ballot</span>
+					</div>
+					<h3 class="font-label-md text-label-md text-on-surface-variant">Total Polls Participated</h3>
+				</div>
+				<div class="font-headline-xl text-headline-xl text-primary">14</div>
+			</div>
+		</div>
+
+		<div class="col-span-1 md:col-span-7 bg-surface-container-lowest shadow-level-1 rounded-xl p-stack-md flex flex-col gap-stack-md">
+			<div class="flex items-center gap-2 border-b border-surface-variant pb-4">
+				<span class="material-symbols-outlined text-outline">location_on</span>
+				<h3 class="font-headline-md text-headline-md text-on-background">Residency Details</h3>
+			</div>
+			<p class="font-body-md text-body-md text-on-surface-variant mb-2">Your current residency dictates your eligibility for local civic polls.</p>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-stack-md">
+				<div class="flex flex-col gap-1.5">
+					<label class="font-label-sm text-label-sm text-outline">State of Residence</label>
+					<div class="bg-surface rounded-lg p-3 font-body-md text-body-md text-on-surface flex items-center justify-between">Lagos State
+						<span class="material-symbols-outlined text-outline text-[18px]">lock</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-span-1 md:col-span-5 bg-surface-container-lowest shadow-level-1 rounded-xl p-stack-md flex flex-col gap-stack-md">
+			<div class="flex items-center gap-2 border-b border-surface-variant pb-4">
+				<span class="material-symbols-outlined text-outline">security</span>
+				<h3 class="font-headline-md text-headline-md text-on-background">Security &amp; Actions</h3>
+			</div>
+			<div class="flex flex-col gap-1.5">
+				<label class="font-label-sm text-label-sm text-outline">Password</label>
+				<div class="bg-surface rounded-lg p-3 font-body-md text-body-md text-on-surface flex items-center justify-between">••••••••••••
+					<button class="text-primary font-label-md hover:underline">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+<footer class="bg-surface-dim full-width mt-stack-lg border-t border-outline-variant">
+	<div class="flex flex-col md:flex-row justify-between items-center gap-stack-md py-stack-lg max-w-[1280px] mx-auto px-margin-mobile md:px-gutter">
+		<div class="flex flex-col items-center md:items-start gap-2">
+			<span class="font-headline-sm text-headline-sm font-bold text-on-surface">pollUnit</span>
+			<p class="font-body-md text-body-md text-on-surface-variant text-center md:text-left">© 2024 pollUnit. Empowering civic transparency through secure digital voting.</p>
+		</div>
+		<nav class="flex flex-wrap justify-center gap-6">
+			<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary underline underline-offset-4 transition-all duration-200 hover:opacity-80" href="#">Terms of Service</a>
+			<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary underline underline-offset-4 transition-all duration-200 hover:opacity-80" href="#">Privacy Policy</a>
+			<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary underline underline-offset-4 transition-all duration-200 hover:opacity-80" href="#">Help Center</a>
+			<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary underline underline-offset-4 transition-all duration-200 hover:opacity-80" href="#">About Nigerian Civic Lab</a>
+		</nav>
+	</div>
+</footer>
