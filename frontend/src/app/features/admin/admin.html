@@ -25,11 +25,11 @@
         {{ view === 'edit' ? 'Edit Poll' : 'Create Poll' }}
       </button>
 
-      <button [routerLink]="['/home']"
+      <a href="/home" target="_blank"
         class="flex items-center gap-3 px-4 py-3 rounded-lg font-label-md text-label-md w-full text-left text-on-surface-variant hover:bg-surface-container-high transition-all">
-        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0">dashboard</span>
-        View Polls
-      </button>
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0">open_in_new</span>
+        View as User
+      </a>
     </nav>
 
     <div class="mt-auto pt-stack-md border-t border-outline-variant/30">
@@ -48,7 +48,7 @@
     <header class="md:hidden flex items-center justify-between p-4 bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-20">
       <span class="text-headline-md font-headline-md font-bold text-primary">pollUnit</span>
       <div class="flex gap-3">
-        <button (click)="goTo('manage')" class="text-on-surface-variant text-label-md font-label-md hover:text-primary transition-colors">Polls</button>
+        <button (click)="goTo('manage')" class="text-on-surface-variant text-label-md font-label-md hover:text-primary transition-colors">Manage</button>
         <button (click)="goTo('create')" class="text-on-surface-variant text-label-md font-label-md hover:text-primary transition-colors">Create</button>
         <button (click)="logout()" class="text-on-surface-variant text-label-md font-label-md hover:text-primary transition-colors">Logout</button>
       </div>
